@@ -3,7 +3,7 @@ const Hotel = require("../models/hotelModel");
 const Restaurant = require("../models/restrauntModel");
 const Transport = require("../models/transportModel");
 const TripOrganizer = require("../models/tripOrganizerModel");
-const { sendBookingConfirmationEmail } = require("../services/bookingEmailService");
+const emailService = require("../services/emailService");
 
 // Get all bookings
 const getBookings = async (req, res) => {
@@ -156,17 +156,77 @@ const createBooking = async (req, res) => {
 		});
 		
 		await newBooking.save();
-
-		try {
-			await sendBookingConfirmationEmail(newBooking);
-			console.log("Booking confirmation email sent to:", email);
-		} catch (emailError) {
-			console.error(
-				"Failed to send booking confirmation email:",
-				emailError.message
-			);
-		}
-
+		
+		// Send booking confirmation email
+		const fromDate = new Date(from).toLocaleDateString();
+		const toDate = new Date(to).toLocaleDateString();
+		
+		const emailSubject = "Booking Confirmation - Tourex";
+		const emailText = `Dear ${firstName} ${lastName},\n\nYour booking has been confirmed!\n\nBooking Details:\nType: ${type}\nFacility: ${facility}\nFrom: ${fromDate}\nTo: ${toDate}\nPrice: $${price}\n\nThank you for choosing Tourex!\n\nBest regards,\nTourex Team`;
+		
+		const emailHtml = `
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<style>
+					body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+					.container { max-width: 600px; margin: 0 auto; padding: 20px; }
+					.header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; }
+					.content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
+					.booking-details { background-color: white; padding: 15px; margin: 15px 0; border-radius: 5px; }
+					.detail-row { margin: 10px 0; }
+					.label { font-weight: bold; color: #555; }
+					.footer { text-align: center; margin-top: 20px; color: #777; font-size: 12px; }
+				</style>
+			</head>
+			<body>
+				<div class="container">
+					<div class="header">
+						<h1>Booking Confirmation</h1>
+					</div>
+					<div class="content">
+						<p>Dear <strong>${firstName} ${lastName}</strong>,</p>
+						<p>Your booking has been confirmed successfully!</p>
+						
+						<div class="booking-details">
+							<h3>Booking Details:</h3>
+							<div class="detail-row">
+								<span class="label">Type:</span> ${type}
+							</div>
+							<div class="detail-row">
+								<span class="label">Facility:</span> ${facility}
+							</div>
+							<div class="detail-row">
+								<span class="label">From:</span> ${fromDate}
+							</div>
+							<div class="detail-row">
+								<span class="label">To:</span> ${toDate}
+							</div>
+							<div class="detail-row">
+								<span class="label">Price:</span> <strong>$${price}</strong>
+							</div>
+							<div class="detail-row">
+								<span class="label">Contact Phone:</span> ${phone}
+							</div>
+						</div>
+						
+						<p>Thank you for choosing Tourex! We look forward to serving you.</p>
+						<p>If you have any questions, please don't hesitate to contact us.</p>
+					</div>
+					<div class="footer">
+						<p>This is an automated email. Please do not reply.</p>
+						<p>&copy; 2025 Tourex. All rights reserved.</p>
+					</div>
+				</div>
+			</body>
+			</html>
+		`;
+		
+		// Send email asynchronously (don't wait for it)
+		emailService("Tourex <noreply@tourex.com>", email, emailSubject, emailText, emailHtml)
+			.then(() => console.log("Booking confirmation email sent"))
+			.catch((err) => console.error("Failed to send booking email:", err));
+		
 		res
 			.status(201)
 			.json({ message: "Booking created successfully", booking: newBooking });

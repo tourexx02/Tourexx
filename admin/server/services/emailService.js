@@ -1,51 +1,37 @@
 const nodemailer = require("nodemailer");
-const {
-	EMAIL_HOST,
-	EMAIL_PORT,
-	EMAIL_USER,
-	EMAIL_PASS,
-	EMAIL_FROM,
-} = require("../config");
+const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = require("../config");
 
-const createTransporter = () => {
-	const port = parseInt(EMAIL_PORT, 10) || 587;
+const emailService = async (from, email, subject, text, html) => {
+	try {
+		if (!EMAIL_USER || !EMAIL_PASS) {
+			console.error("CRITICAL ERROR: EMAIL_USER or EMAIL_PASS environment variables are missing! Email cannot be sent.");
+			return { success: false, error: "Missing email credentials" };
+		}
+		
+		const transporter = nodemailer.createTransport({
+			host: EMAIL_HOST,
+			port: parseInt(EMAIL_PORT, 10),
+			secure: parseInt(EMAIL_PORT, 10) === 465,
+			auth: {
+				user: EMAIL_USER,
+				pass: EMAIL_PASS,
+			},
+		});
 
-	return nodemailer.createTransport({
-		host: EMAIL_HOST,
-		port,
-		secure: port === 465,
-		auth: {
-			user: EMAIL_USER,
-			pass: EMAIL_PASS,
-		},
-		...(port === 587 && { requireTLS: true }),
-	});
-};
-
-const emailService = async (to, subject, text, html) => {
-	if (!EMAIL_USER || !EMAIL_PASS) {
-		throw new Error(
-			"Email credentials are not configured (EMAIL_USER / EMAIL_PASS)"
-		);
+		await transporter.sendMail({
+			from: from,
+			to: email,
+			subject: subject,
+			text: text,
+			html: html,
+		});
+		console.log("Email sent successfully to:", email);
+		return { success: true };
+	} catch (error) {
+		console.log("Email not sent!");
+		console.log(error);
+		return { success: false, error };
 	}
-
-	if (!to) {
-		throw new Error("Recipient email address is required");
-	}
-
-	const from = `Tourex <${EMAIL_FROM || EMAIL_USER}>`;
-	const transporter = createTransporter();
-
-	const info = await transporter.sendMail({
-		from,
-		to,
-		subject,
-		text,
-		html,
-	});
-
-	console.log("Email sent successfully to:", to, "| messageId:", info.messageId);
-	return { success: true, messageId: info.messageId };
 };
 
 module.exports = emailService;
