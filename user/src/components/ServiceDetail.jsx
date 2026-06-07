@@ -896,20 +896,22 @@ const HotelBookingComponent = ({
 					rawDiningTypes.push("Standard Dining");
 				}
 
+				const restaurantBudget = Number(apiData.budget) || 0;
+
 				const diningOptions = rawDiningTypes.map((diningLabel, index) => ({
 					type: diningLabel,
 					name: diningLabel,
 					diningType: diningLabel,
-					price: formatPriceDisplay(0),
-					priceValue: 0,
+					price: formatPriceDisplay(restaurantBudget),
+					priceValue: restaurantBudget,
 					selected: index === 0,
 				}));
 
 				return {
 					...baseData,
 					badges: ["Top Rated", "Best Restaurant"],
-					price: formatPriceDisplay(0),
-					priceValue: 0,
+					price: formatPriceDisplay(restaurantBudget),
+					priceValue: restaurantBudget,
 					description:
 						apiData.description ||
 						`${apiData.name} offers a memorable dining experience in ${
@@ -1100,10 +1102,7 @@ const HotelBookingComponent = ({
 				}
 			}
 
-		// Get appropriate price field based on service type
-		const getPrice = () => {
-			return serviceType === "restaurant" ? 0 : totalPriceValue;
-		};
+		const getPrice = () => totalPriceValue;
 
 		// For restaurants, create date with selected time
 		const getFromDate = () => {
@@ -1265,12 +1264,21 @@ const HotelBookingComponent = ({
 		roomTypeOptions[0] ||
 		null;
 
-	const basePriceValue =
-		serviceType === "restaurant"
-			? 0
-			: selectedRoomData?.priceValue ??
-			  parsePriceValue(selectedRoomData?.price ?? currentHotelData.price) ??
-			  parsePriceValue(currentHotelData.price);
+	const getBookingUnits = () => {
+		if (serviceType === "restaurant") return 1;
+		if (!checkInDate || !checkOutDate) return 1;
+		const diffMs = checkOutDate.getTime() - checkInDate.getTime();
+		if (diffMs <= 0) return 1;
+		return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+	};
+
+	const unitPriceValue =
+		selectedRoomData?.priceValue ??
+		parsePriceValue(selectedRoomData?.price ?? currentHotelData.price) ??
+		parsePriceValue(currentHotelData.price);
+
+	const bookingUnits = getBookingUnits();
+	const basePriceValue = unitPriceValue * bookingUnits;
 
 	const taxValue = 0;
 	const totalPriceValue = basePriceValue + taxValue;
@@ -1965,7 +1973,7 @@ const HotelBookingComponent = ({
 													)}
 											</div>
 										</label>
-										{serviceType !== "restaurant" && room.price && (
+										{room.price && (
 											<span className='font-semibold text-[#2F4157]'>
 												{room.price}
 											</span>
