@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useParams, useLocation } from "react-router-dom";
 import { hotelAPI, restaurantAPI, transportAPI, tripOrganizerAPI, bookingAPI } from "../services/api";
+import { buildServiceImages, getServiceImageUrl } from "../utils/imageUrl";
 import VenueMapPreview from "./VenueMapPreview";
 import logo from "../assets/logo.png";
 import toast, { Toaster } from 'react-hot-toast';
@@ -780,20 +781,7 @@ const HotelBookingComponent = ({
 			name: apiData.name || hotelData.name,
 			rating: 4.2, // Default rating since API doesn't have this
 			reviews: "1288", // Default reviews
-			images: {
-				main: apiData.images?.[0]
-					? `${import.meta.env.VITE_SERVER_BASE_URL}/uploads/${apiData.images[0]}`
-					: hotelData.images.main,
-				secondary:
-					apiData.images
-						?.slice(1, 3)
-						.map((img) => `${import.meta.env.VITE_SERVER_BASE_URL}/uploads/${img}`) ||
-					hotelData.images.secondary,
-				gallery:
-					apiData.images?.map(
-						(img) => `${import.meta.env.VITE_SERVER_BASE_URL ? import.meta.env.VITE_SERVER_BASE_URL.replace('/api', '') : 'http://localhost:8080'}/uploads/${img}`
-					) || hotelData.images.gallery,
-			},
+			images: buildServiceImages(apiData.images, serviceType),
 			amenities: formatAmenitiesData(
 				apiData.amenities,
 				hotelData.amenities || []
@@ -1351,6 +1339,11 @@ const HotelBookingComponent = ({
 
 	const serviceLabels = getServiceLabels();
 
+	const handleImageError = (event) => {
+		event.target.onerror = null;
+		event.target.src = getServiceImageUrl({}, serviceType);
+	};
+
 	const CalendarPopup = () => (
 		<div
 			className='fixed inset-0 bg-gray-500 bg-opacity-30 flex items-center justify-center z-50'
@@ -1565,6 +1558,7 @@ const HotelBookingComponent = ({
 									src={image}
 									alt={`${currentHotelData.name} image ${index + 1}`}
 									className='w-full h-64 object-cover rounded-lg cursor-pointer transition-transform group-hover:scale-105'
+									onError={handleImageError}
 									onClick={() => {
 										// Optional: Add lightbox functionality here
 									}}
@@ -1672,6 +1666,7 @@ const HotelBookingComponent = ({
 								src={currentHotelData.images.gallery[0]}
 								alt={`${currentHotelData.name} main view`}
 								className='w-full h-full object-cover rounded-l-lg'
+								onError={handleImageError}
 							/>
 						)}
 					</div>
@@ -1695,6 +1690,7 @@ const HotelBookingComponent = ({
 										? ""
 										: "rounded-br-lg"
 								}`}
+								onError={handleImageError}
 							/>
 
 							{/* See all photos button overlay on the last image */}

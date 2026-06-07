@@ -213,6 +213,7 @@ const TripOrganizerOnboarding = () => {
       priceRange: organizer.priceRange?.toString() || '',
       tourOptions: normalizedTourOptions,
       amenities: Array.isArray(organizer.amenities) ? organizer.amenities : [],
+      images: null,
     });
     
     // Set existing images for preview (if any)

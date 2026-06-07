@@ -1,37 +1,41 @@
 const nodemailer = require("nodemailer");
-const { Resend } = require("resend");
+const sgMail = require("@sendgrid/mail");
 const {
 	EMAIL_HOST,
 	EMAIL_PORT,
 	EMAIL_USER,
 	EMAIL_PASS,
 	EMAIL_FROM,
-	RESEND_API_KEY,
+	SENDGRID_API_KEY,
 } = require("../config");
 
 const SMTP_TIMEOUT_MS = 10000;
 
 const getFromAddress = () => {
-	if (EMAIL_FROM) return `Tourex <${EMAIL_FROM}>`;
+	if (EMAIL_FROM) {
+		return EMAIL_FROM.includes("<")
+			? EMAIL_FROM
+			: `Tourex <${EMAIL_FROM}>`;
+	}
 	if (EMAIL_USER) return `Tourex <${EMAIL_USER}>`;
-	return "Tourex <onboarding@resend.dev>";
+	throw new Error("EMAIL_FROM is not configured");
 };
 
-const sendViaResend = async (to, subject, text, html) => {
-	const resend = new Resend(RESEND_API_KEY);
-	const { data, error } = await resend.emails.send({
+const sendViaSendGrid = async (to, subject, text, html) => {
+	sgMail.setApiKey(SENDGRID_API_KEY);
+
+	const [response] = await sgMail.send({
+		to,
 		from: getFromAddress(),
-		to: [to],
 		subject,
 		text,
 		html,
 	});
 
-	if (error) {
-		throw new Error(error.message);
-	}
-
-	return { success: true, messageId: data?.id };
+	return {
+		success: true,
+		messageId: response?.headers?.["x-message-id"],
+	};
 };
 
 const sendViaSmtp = async (to, subject, text, html) => {
@@ -67,13 +71,13 @@ const emailService = async (to, subject, text, html) => {
 		throw new Error("Recipient email address is required");
 	}
 
-	if (RESEND_API_KEY) {
-		return sendViaResend(to, subject, text, html);
+	if (SENDGRID_API_KEY) {
+		return sendViaSendGrid(to, subject, text, html);
 	}
 
 	if (!EMAIL_USER || !EMAIL_PASS) {
 		throw new Error(
-			"Email not configured. Set RESEND_API_KEY (production) or EMAIL_USER/EMAIL_PASS (local SMTP)."
+			"Email not configured. Set SENDGRID_API_KEY (production) or EMAIL_USER/EMAIL_PASS (local SMTP)."
 		);
 	}
 

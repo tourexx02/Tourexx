@@ -1,3 +1,5 @@
+import { getServiceImageUrl } from '../utils/imageUrl';
+
 const API_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL || 'http://localhost:8080/api';
 const apiRequest = async (endpoint, options = {}) => {
   try {
@@ -269,7 +271,7 @@ export const transformServiceData = (backendData, serviceType) => {
       phone: item.phone,
       address: item.address,
       description: item.description || generateDescription(item, serviceType),
-      image: getServiceImage(item, serviceType),
+      image: getServiceImageUrl(item, serviceType),
       images: item.images || [],
       type: serviceType,
       createdAt: item.createdAt,
@@ -461,40 +463,6 @@ const generateDescription = (item, serviceType) => {
     default:
       return 'Quality service provider offering excellent customer experience.';
   }
-};
-
-const getServiceImage = (item, serviceType) => {
-  if (item.images && Array.isArray(item.images) && item.images.length > 0) {
-    // Derive the server base URL from the API URL env var (strip "/api" suffix)
-    const apiBaseUrl = import.meta.env.VITE_SERVER_BASE_URL || 'http://localhost:8080/api';
-    const serverBaseURL = apiBaseUrl.replace(/\/api\/?$/, '');
-    const imageName = item.images[0];
-    
-    let imageUrl;
-    if (imageName && imageName.startsWith('http')) {
-      imageUrl = imageName;
-    } else if (imageName) {
-      const cleanImageName = imageName.replace(/^\//, '');
-      imageUrl = `${serverBaseURL}/uploads/${cleanImageName}`;
-    } else {
-      return getDefaultImage(serviceType);
-    }
-    
-    return imageUrl;
-  } else {
-    return getDefaultImage(serviceType);
-  }
-};
-
-const getDefaultImage = (serviceType) => {
-  const defaultImages = {
-    hotel: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop',
-    restaurant: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop',
-    transport: 'https://images.unsplash.com/photo-1549924231-f129b911e442?w=400&h=300&fit=crop',
-    'trip-organizer': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-  };
-  
-  return defaultImages[serviceType] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop';
 };
 
 export default serviceAPI;

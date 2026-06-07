@@ -189,6 +189,7 @@ const RestaurantOnboarding = () => {
       diningTypes: predefinedSelections,
       customDiningTypes: customSelections,
       amenities: Array.isArray(restaurant.amenities) ? restaurant.amenities : [],
+      images: null,
     });
     
     // Set existing images for preview (if any)

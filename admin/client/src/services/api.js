@@ -4,6 +4,13 @@ import axios from 'axios';
 const API_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL || 'http://localhost:8080/api';
 
 // Create axios instance with default config
+const appendImageFiles = (formData, images) => {
+  if (!images) return;
+  Array.from(images)
+    .filter((file) => file instanceof File)
+    .forEach((file) => formData.append('images', file));
+};
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -42,11 +49,8 @@ export const hotelAPI = {
       
       // Append all hotel data to FormData
       Object.keys(hotelData).forEach(key => {
-        if (key === 'images' && hotelData[key]) {
-          // Handle multiple images
-          Array.from(hotelData[key]).forEach(file => {
-            formData.append('images', file);
-          });
+        if (key === 'images') {
+          appendImageFiles(formData, hotelData[key]);
         } else if (key === 'roomPricing' && hotelData[key]) {
           // Handle roomPricing object - stringify it
           formData.append('roomPricing', JSON.stringify(hotelData[key]));
@@ -76,11 +80,8 @@ export const hotelAPI = {
       
       // Append all hotel data to FormData
       Object.keys(hotelData).forEach(key => {
-        if (key === 'images' && hotelData[key]) {
-          // Handle multiple images
-          Array.from(hotelData[key]).forEach(file => {
-            formData.append('images', file);
-          });
+        if (key === 'images') {
+          appendImageFiles(formData, hotelData[key]);
         } else if (key === 'roomPricing' && hotelData[key]) {
           // Handle roomPricing object - stringify it
           formData.append('roomPricing', JSON.stringify(hotelData[key]));
@@ -153,10 +154,8 @@ export const restaurantAPI = {
     try {
       const formData = new FormData();
       Object.keys(restaurantData).forEach(key => {
-        if (key === 'images' && restaurantData[key]) {
-          Array.from(restaurantData[key]).forEach(file => {
-            formData.append('images', file);
-          });
+        if (key === 'images') {
+          appendImageFiles(formData, restaurantData[key]);
         } else if (key === 'amenities') {
           formData.append('amenities', JSON.stringify(restaurantData[key] || []));
         } else if (key === 'diningType') {
@@ -180,10 +179,8 @@ export const restaurantAPI = {
     try {
       const formData = new FormData();
       Object.keys(restaurantData).forEach(key => {
-        if (key === 'images' && restaurantData[key]) {
-          Array.from(restaurantData[key]).forEach(file => {
-            formData.append('images', file);
-          });
+        if (key === 'images') {
+          appendImageFiles(formData, restaurantData[key]);
         } else if (key === 'amenities') {
           formData.append('amenities', JSON.stringify(restaurantData[key] || []));
         } else if (key === 'diningType') {
@@ -252,10 +249,8 @@ export const transportAPI = {
     try {
       const formData = new FormData();
       Object.keys(transportData).forEach(key => {
-        if (key === 'images' && transportData[key]) {
-          Array.from(transportData[key]).forEach(file => {
-            formData.append('images', file);
-          });
+        if (key === 'images') {
+          appendImageFiles(formData, transportData[key]);
         } else if (key === 'amenities') {
           formData.append('amenities', JSON.stringify(transportData[key] || []));
         } else if (key === 'vehicleTypes') {
@@ -281,10 +276,8 @@ export const transportAPI = {
     try {
       const formData = new FormData();
       Object.keys(transportData).forEach(key => {
-        if (key === 'images' && transportData[key]) {
-          Array.from(transportData[key]).forEach(file => {
-            formData.append('images', file);
-          });
+        if (key === 'images') {
+          appendImageFiles(formData, transportData[key]);
         } else if (key === 'amenities') {
           formData.append('amenities', JSON.stringify(transportData[key] || []));
         } else if (key === 'vehicleTypes') {
@@ -355,10 +348,8 @@ export const tripOrganizerAPI = {
     try {
       const formData = new FormData();
       Object.keys(tripOrganizerData).forEach(key => {
-        if (key === 'images' && tripOrganizerData[key]) {
-          Array.from(tripOrganizerData[key]).forEach(file => {
-            formData.append('images', file);
-          });
+        if (key === 'images') {
+          appendImageFiles(formData, tripOrganizerData[key]);
         } else if (key === 'amenities') {
           formData.append('amenities', JSON.stringify(tripOrganizerData[key] || []));
         } else if (key === 'tourOptions') {
@@ -384,10 +375,8 @@ export const tripOrganizerAPI = {
     try {
       const formData = new FormData();
       Object.keys(tripOrganizerData).forEach(key => {
-        if (key === 'images' && tripOrganizerData[key]) {
-          Array.from(tripOrganizerData[key]).forEach(file => {
-            formData.append('images', file);
-          });
+        if (key === 'images') {
+          appendImageFiles(formData, tripOrganizerData[key]);
         } else if (key === 'amenities') {
           formData.append('amenities', JSON.stringify(tripOrganizerData[key] || []));
         } else if (key === 'tourOptions') {

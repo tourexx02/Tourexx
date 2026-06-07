@@ -12,6 +12,6 @@ module.exports = {
 	EMAIL_USER: process.env.EMAIL_USER,
 	EMAIL_PASS: process.env.EMAIL_PASS,
 	EMAIL_FROM: process.env.EMAIL_FROM,
-	RESEND_API_KEY: process.env.RESEND_API_KEY,
+	SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
 	OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 };
