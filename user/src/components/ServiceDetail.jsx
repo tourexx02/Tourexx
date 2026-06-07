@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useParams, useLocation } from "react-router-dom";
 import { hotelAPI, restaurantAPI, transportAPI, tripOrganizerAPI, bookingAPI } from "../services/api";
+import VenueMapPreview from "./VenueMapPreview";
 import logo from "../assets/logo.png";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -815,6 +816,7 @@ const HotelBookingComponent = ({
 			// Add API specific data
 			city: apiData.city || apiData.location,
 			address: apiData.address,
+			googleMapsLocation: apiData.googleMapsLocation || "",
 			email: apiData.email,
 			phone: apiData.phone,
 		};
@@ -1992,19 +1994,12 @@ const HotelBookingComponent = ({
 						</div>
 					</div>
 					<div className='rounded-lg py-4'>
-						<div className='w-84 h-74 rounded-lg overflow-hidden bg-gray-200 relative'>
-							{/* Embedded OpenStreetMap for Islamabad */}
-							<iframe
-								src='https://www.openstreetmap.org/export/embed.html?bbox=72.9979%2C33.6344%2C73.0979%2C33.7344&amp;layer=mapnik'
-								className='w-full h-full border-0'
-								title='Islamabad Map'
-							/>
-
-							{/* Optional overlay with location name */}
-							<div className='absolute top-2 right-2 bg-white bg-opacity-90 rounded px-2 py-1 text-xs font-medium text-gray-700'>
-								Islamabad
-							</div>
-						</div>
+						<VenueMapPreview
+							googleMapsLocation={currentHotelData.googleMapsLocation}
+							venueName={currentHotelData.name}
+							address={currentHotelData.address}
+							city={currentHotelData.city}
+						/>
 					</div>
 				</div>
 

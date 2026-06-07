@@ -70,19 +70,20 @@ const getRestaurantById = async (req, res) => {
 // Create a new restaurant
 const createRestaurant = async (req, res) => {
 	try {
-		const { name, email, phone, address, city, description, budget, diningType, vendorId } = req.body;
+		const { name, email, phone, address, googleMapsLocation, city, description, budget, diningType, vendorId } = req.body;
 	const amenities = parseStringArray(req.body.amenities);
 	const diningTypeArray = parseStringArray(diningType);
 		
 		// Handle multiple image uploads
 		const images = req.files ? req.files.map(file => file.filename) : [];
 		
-		const newRestaurant = new Restaurant({ 
-			name, 
-			email, 
-			phone, 
-			address, 
-			city, 
+		const newRestaurant = new Restaurant({
+			name,
+			email,
+			phone,
+			address,
+			googleMapsLocation: googleMapsLocation || "",
+			city,
 			description,
 			budget, 
 			diningType: diningTypeArray,
@@ -114,12 +115,12 @@ const createRestaurant = async (req, res) => {
 // Update restaurant
 const updateRestaurant = async (req, res) => {
 	try {
-		const { name, email, phone, address, city, description, budget, diningType } = req.body;
+		const { name, email, phone, address, googleMapsLocation, city, description, budget, diningType } = req.body;
 	const amenities = parseStringArray(req.body.amenities);
 	const diningTypeArray = parseStringArray(diningType);
 		
 		// Prepare update data
-	const updateData = { name, email, phone, address, city, description, budget, diningType: diningTypeArray, amenities };
+	const updateData = { name, email, phone, address, googleMapsLocation, city, description, budget, diningType: diningTypeArray, amenities };
 		
 		// Handle multiple image uploads if new images are provided
 		if (req.files && req.files.length > 0) {

@@ -6,6 +6,7 @@ const hotelSchema = new mongoose.Schema(
 		email: { type: String, required: true, unique: true },
 		phone: { type: Number, required: true },
 		address: { type: String, required: true },
+		googleMapsLocation: { type: String, required: false },
 		city: { type: String, required: true },
 		description: { type: String, required: false },
 		roomPricing: {

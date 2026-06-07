@@ -6,6 +6,7 @@ const tripOrganizerSchema = new mongoose.Schema(
 		email: { type: String, required: true, unique: true },
 		phone: { type: Number, required: true },
 		address: { type: String, required: true },
+		googleMapsLocation: { type: String, required: false },
 		description: { type: String, required: false },
 		priceRange: { type: Number, required: true },
 		availability: { type: String, required: true },

@@ -70,7 +70,7 @@ const parseAmenities = (value) => {
 
 const createHotel = async (req, res) => {
 	try {
-		const { name, email, phone, address, city, description, payment, vendorId } = req.body;
+		const { name, email, phone, address, googleMapsLocation, city, description, payment, vendorId } = req.body;
 		const amenities = parseAmenities(req.body.amenities);
 		
 		// Parse roomPricing from JSON string
@@ -96,7 +96,8 @@ const createHotel = async (req, res) => {
 			name, 
 			email, 
 			phone, 
-			address, 
+			address,
+			googleMapsLocation: googleMapsLocation || "",
 			city, 
 			description,
 			roomPricing, 
@@ -129,7 +130,7 @@ const createHotel = async (req, res) => {
 // Update hotel
 const updateHotel = async (req, res) => {
 	try {
-		const { name, email, phone, address, city, description, payment } = req.body;
+		const { name, email, phone, address, googleMapsLocation, city, description, payment } = req.body;
 		const amenities = parseAmenities(req.body.amenities);
 		
 		// Parse roomPricing from JSON string
@@ -149,7 +150,7 @@ const updateHotel = async (req, res) => {
 		}
 		
 		// Prepare update data
-		const updateData = { name, email, phone, address, city, description, roomPricing, payment, amenities };
+		const updateData = { name, email, phone, address, googleMapsLocation, city, description, roomPricing, payment, amenities };
 		
 		// Handle multiple image uploads if new images are provided
 		if (req.files && req.files.length > 0) {

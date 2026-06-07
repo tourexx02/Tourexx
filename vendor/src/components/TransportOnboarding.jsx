@@ -28,6 +28,7 @@ const TransportOnboarding = () => {
 		email: "",
 		phone: "",
 		address: "",
+		googleMapsLocation: "",
 		location: "",
 		budget: "",
 		vehicleOptions: [],
@@ -309,6 +310,7 @@ const TransportOnboarding = () => {
 			email: "",
 			phone: "",
 			address: "",
+			googleMapsLocation: "",
 			location: "",
 			budget: "",
 			vehicleOptions: [],
@@ -817,6 +819,23 @@ const TransportOnboarding = () => {
 									rows='2'
 									className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2F4157] focus:border-transparent'
 									required></textarea>
+							</div>
+
+							<div>
+								<label className='block text-sm font-medium text-gray-700 mb-2'>
+									Google Maps Location
+								</label>
+								<input
+									type='text'
+									name='googleMapsLocation'
+									value={formData.googleMapsLocation || ''}
+									onChange={handleInputChange}
+									placeholder='Paste Google Maps link or coordinates (e.g. 33.6844, 73.0479)'
+									className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2F4157] focus:border-transparent'
+								/>
+								<p className='text-xs text-gray-500 mt-1'>
+									Open Google Maps, drop a pin on your venue, tap Share, and paste the link here.
+								</p>
 							</div>
 
 							<div>
