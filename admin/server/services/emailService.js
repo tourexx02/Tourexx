@@ -5,8 +5,8 @@ const emailService = async (from, email, subject, text, html) => {
 	try {
 		const transporter = nodemailer.createTransport({
 			host: EMAIL_HOST,
-			port: EMAIL_PORT,
-			secure: false,
+			port: parseInt(EMAIL_PORT, 10),
+			secure: parseInt(EMAIL_PORT, 10) === 465,
 			auth: {
 				user: EMAIL_USER,
 				pass: EMAIL_PASS,

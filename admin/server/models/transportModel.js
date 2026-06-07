@@ -8,7 +8,7 @@ const transportSchema = new mongoose.Schema(
 		address: { type: String, required: true },
 		location: { type: String, required: true },
 		description: { type: String, required: false },
-		budget: { type: Number, required: true },
+		budget: { type: Number, required: false },
 		vehicleOptions: [
 			{
 				name: { type: String, required: true },

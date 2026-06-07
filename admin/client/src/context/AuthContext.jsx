@@ -48,7 +48,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       // Call logout API
-      await fetch('http://localhost:8080/api/admin/logout', {
+      const apiBaseUrl = import.meta.env.VITE_SERVER_BASE_URL || 'http://localhost:8080/api';
+      await fetch(`${apiBaseUrl}/admin/logout`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

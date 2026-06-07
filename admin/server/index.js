@@ -13,13 +13,15 @@ const corsOptions = {
 		CLIENT_BASE_URL,
 		ADMIN_BASE_URL,
 		VENDOR_BASE_URL,
-		localUser,
+		"http://localhost:5174",
+		"http://localhost:5175",
+		"http://localhost:5173",
 		"https://tourexx.up.railway.app",
 		"https://admin-tourexx.up.railway.app",
 		"https://vendor-tourexx.up.railway.app"
 
 	],
-	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+	methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 	credentials: true,
 	optionsSuccessStatus: 200
 };

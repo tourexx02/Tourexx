@@ -12,8 +12,8 @@ const router = express.Router();
 
 // Business registration routes
 router.get("/", getAllBusinesses);
-router.get("/:id", getBusinessById);
 router.get("/type/:type", getBusinessesByType);
+router.get("/:id", getBusinessById);
 router.post("/", createBusiness);
 router.delete("/:id", deleteBusiness);
 

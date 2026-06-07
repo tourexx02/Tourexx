@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://server-tourexx.up.railway.app/api' || 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL || 'http://localhost:8080/api';
 const apiRequest = async (endpoint, options = {}) => {
   try {
     const url = `${API_BASE_URL}${endpoint}`;
@@ -465,7 +465,9 @@ const generateDescription = (item, serviceType) => {
 
 const getServiceImage = (item, serviceType) => {
   if (item.images && Array.isArray(item.images) && item.images.length > 0) {
-    const serverBaseURL = 'http://localhost:8080';
+    // Derive the server base URL from the API URL env var (strip "/api" suffix)
+    const apiBaseUrl = import.meta.env.VITE_SERVER_BASE_URL || 'http://localhost:8080/api';
+    const serverBaseURL = apiBaseUrl.replace(/\/api\/?$/, '');
     const imageName = item.images[0];
     
     let imageUrl;
