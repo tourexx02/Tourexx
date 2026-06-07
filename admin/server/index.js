@@ -30,9 +30,17 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // API routes
 app.use("/api", routes);
 
-// Connect to database and initialize admin
-dbConnect();
+// Connect to database and start server
+const startServer = async () => {
+	try {
+		await dbConnect();
+		app.listen(PORT, () => {
+			console.log(`Server is running on http://localhost:${PORT}`);
+		});
+	} catch (error) {
+		console.error("Failed to connect to database:", error);
+		process.exit(1);
+	}
+};
 
-app.listen(PORT, () => {
-	console.log(`Server is running on http://localhost:${PORT}`);
-});
+startServer();
