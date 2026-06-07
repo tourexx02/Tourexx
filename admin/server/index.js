@@ -14,7 +14,12 @@ const corsOptions = {
 		ADMIN_BASE_URL,
 		VENDOR_BASE_URL,
 		localUser,
+		"https://tourexx.up.railway.app",
+		"https://admin-tourexx.up.railway.app",
+		"https://vendor-tourexx.up.railway.app"
+
 	],
+	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 	credentials: true,
 	optionsSuccessStatus: 200
 };
