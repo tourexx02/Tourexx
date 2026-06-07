@@ -3,6 +3,11 @@ const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = require("../config");
 
 const emailService = async (from, email, subject, text, html) => {
 	try {
+		if (!EMAIL_USER || !EMAIL_PASS) {
+			console.error("CRITICAL ERROR: EMAIL_USER or EMAIL_PASS environment variables are missing! Email cannot be sent.");
+			return { success: false, error: "Missing email credentials" };
+		}
+		
 		const transporter = nodemailer.createTransport({
 			host: EMAIL_HOST,
 			port: parseInt(EMAIL_PORT, 10),
