@@ -1,7 +1,7 @@
 // import React, { useRef, useEffect } from "react";
 import { MessageCircle, Plus, Smile, Paperclip, Send, X } from "lucide-react";
 import ai from "../assets/AI.svg";
-import chat from "../assets/chat.png";
+import chat from "../assets/Chat.png";
 
 const ChatSection = () => {
   return (
