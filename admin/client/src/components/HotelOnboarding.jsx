@@ -176,7 +176,7 @@ const HotelOnboarding = () => {
     
     // Set existing images for preview (if any)
     if (hotel.images && hotel.images.length > 0) {
-      const existingImageUrls = hotel.images.map(img => `http://localhost:8080/uploads/${img}`);
+      const existingImageUrls = hotel.images.map(img => `${import.meta.env.VITE_SERVER_BASE_URL ? import.meta.env.VITE_SERVER_BASE_URL.replace('/api', '') : 'http://localhost:8080'}/uploads/${img}`);
       setImagePreview(existingImageUrls);
     } else {
       setImagePreview([]);

@@ -188,7 +188,7 @@ const RestaurantOnboarding = () => {
     
     // Set existing images for preview (if any)
     if (restaurant.images && restaurant.images.length > 0) {
-      const existingImageUrls = restaurant.images.map(img => `http://localhost:8080/uploads/${img}`);
+      const existingImageUrls = restaurant.images.map(img => `${import.meta.env.VITE_SERVER_BASE_URL ? import.meta.env.VITE_SERVER_BASE_URL.replace('/api', '') : 'http://localhost:8080'}/uploads/${img}`);
       setImagePreview(existingImageUrls);
     } else {
       setImagePreview([]);

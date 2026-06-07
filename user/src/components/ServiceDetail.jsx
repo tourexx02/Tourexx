@@ -781,16 +781,16 @@ const HotelBookingComponent = ({
 			reviews: "1288", // Default reviews
 			images: {
 				main: apiData.images?.[0]
-					? `http://localhost:8080/uploads/${apiData.images[0]}`
+					? `${import.meta.env.VITE_SERVER_BASE_URL ? import.meta.env.VITE_SERVER_BASE_URL.replace('/api', '') : 'http://localhost:8080'}/uploads/${apiData.images[0]}`
 					: hotelData.images.main,
 				secondary:
 					apiData.images
 						?.slice(1, 3)
-						.map((img) => `http://localhost:8080/uploads/${img}`) ||
+						.map((img) => `${import.meta.env.VITE_SERVER_BASE_URL ? import.meta.env.VITE_SERVER_BASE_URL.replace('/api', '') : 'http://localhost:8080'}/uploads/${img}`) ||
 					hotelData.images.secondary,
 				gallery:
 					apiData.images?.map(
-						(img) => `http://localhost:8080/uploads/${img}`
+						(img) => `${import.meta.env.VITE_SERVER_BASE_URL ? import.meta.env.VITE_SERVER_BASE_URL.replace('/api', '') : 'http://localhost:8080'}/uploads/${img}`
 					) || hotelData.images.gallery,
 			},
 			amenities: formatAmenitiesData(

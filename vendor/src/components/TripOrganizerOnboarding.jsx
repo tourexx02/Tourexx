@@ -220,7 +220,7 @@ const TripOrganizerOnboarding = () => {
     
     // Set existing images for preview (if any)
     if (organizer.images && organizer.images.length > 0) {
-      const existingImageUrls = organizer.images.map(img => `http://localhost:8080/uploads/${img}`);
+      const existingImageUrls = organizer.images.map(img => `${import.meta.env.VITE_SERVER_BASE_URL ? import.meta.env.VITE_SERVER_BASE_URL.replace('/api', '') : 'http://localhost:8080'}/uploads/${img}`);
       setImagePreview(existingImageUrls);
     } else {
       setImagePreview([]);

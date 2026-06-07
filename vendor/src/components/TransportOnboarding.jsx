@@ -269,7 +269,7 @@ const TransportOnboarding = () => {
 		// Set existing images for preview (if any)
 		if (transport.images && transport.images.length > 0) {
 			const existingImageUrls = transport.images.map(
-				(img) => `http://localhost:8080/uploads/${img}`
+				(img) => `${import.meta.env.VITE_SERVER_BASE_URL ? import.meta.env.VITE_SERVER_BASE_URL.replace('/api', '') : 'http://localhost:8080'}/uploads/${img}`
 			);
 			setImagePreview(existingImageUrls);
 		} else {
