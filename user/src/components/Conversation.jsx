@@ -4,6 +4,7 @@ import {
   Plus,
   Mic,
   Send,
+  Share2,
   User,
   Building2,
   UtensilsCrossed,
@@ -14,6 +15,8 @@ import {
   CloudRain,
 } from "lucide-react";
 import { chatAPI } from "../services/api";
+import ShareChatModal from "./ShareChatModal";
+import { formatChatMessagesForShare } from "../utils/formatChatForShare";
 
 export default function TravelApp() {
   const [messages, setMessages] = useState([]);
@@ -21,7 +24,18 @@ export default function TravelApp() {
   const [showChatView, setShowChatView] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const shareableMessages = messages.filter(
+    (msg) => msg.sender === "user" || msg.sender === "ai"
+  );
+  const shareText = formatChatMessagesForShare(messages);
+
+  const handleShareChat = () => {
+    if (shareableMessages.length === 0) return;
+    setShowShareModal(true);
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -765,6 +779,24 @@ export default function TravelApp() {
           <>
             {/* Chat Panel - Left Side */}
             <div className="flex-1 flex flex-col bg-gray-50">
+              {/* Chat Header with Share */}
+              <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 bg-white">
+                <h2 className="text-sm font-medium text-gray-700">
+                  {currentLocation?.name
+                    ? `Trip to ${currentLocation.name}`
+                    : "Travel conversation"}
+                </h2>
+                <button
+                  onClick={handleShareChat}
+                  disabled={shareableMessages.length === 0}
+                  className="p-2 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                  title="Share chat messages"
+                  aria-label="Share chat messages"
+                >
+                  <Share2 size={18} />
+                </button>
+              </div>
+
               {/* Chat Messages Area */}
               <div className="flex-1 p-6 overflow-y-auto">
                 {/* Messages Container */}
@@ -870,6 +902,12 @@ export default function TravelApp() {
           </>
         )}
       </div>
+
+      <ShareChatModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        shareText={shareText}
+      />
     </div>
   );
 }
